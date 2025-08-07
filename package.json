@@ -1,0 +1,8 @@
+{
+  "name": "local-internet-archiver",
+  "version": "0.1.0",
+  "description": "Cross-browser extension that archives visited pages locally.",
+  "scripts": {
+    "test": "echo 'no tests'"
+  }
+}

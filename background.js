@@ -1,18 +1,26 @@
-importScripts('idb.js');   // tiny helper – or replace with vanilla IDB
+const browserApi = typeof browser !== 'undefined' ? browser : chrome;
 
-const dbPromise = idb.openDB('archives', 1, {
-  upgrade(db) {
-    const store = db.createObjectStore('pages', { keyPath: 'url' });
-    store.createIndex('ts', 'ts');
-  }
-});
-
-chrome.runtime.onMessage.addListener(async data => {
+browserApi.runtime.onMessage.addListener(async (data) => {
   try {
-    const db = await dbPromise;
-    await db.put('pages', data);       // overwrites if same URL visited twice
-    console.log('[saved]', data.url);
-  } catch (e) {
-    console.error('DB error', e);
+    const { enabled, folder } = await browserApi.storage.local.get({
+      enabled: true,
+      folder: 'Your Archive'
+    });
+    if (enabled === false) {
+      return;
+    }
+
+    const url = new URL(data.url);
+    const d = new Date();
+    const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const time = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}${String(d.getSeconds()).padStart(2, '0')}`;
+    const path = `${folder}/${url.hostname}/${day}/${time}.html`;
+
+    const blobUrl = URL.createObjectURL(new Blob([data.html], { type: 'text/html' }));
+    await browserApi.downloads.download({ url: blobUrl, filename: path, saveAs: false });
+    URL.revokeObjectURL(blobUrl);
+    console.log('[saved]', path);
+  } catch (err) {
+    console.error('archive error', err);
   }
 });
