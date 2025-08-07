@@ -8,7 +8,7 @@
     ts: Date.now()
   };
 
-  // Send the page snapshot to the background script for storage.
+  // Send the page snapshot to the background script for storage on disk.
   browserApi.runtime.sendMessage(payload).catch((err) => {
     console.error('sendMessage failed', err);
   });

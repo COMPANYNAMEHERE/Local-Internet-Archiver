@@ -1,24 +1,31 @@
-importScripts('idb.js');
-
-// Prefer the `browser` namespace when available, otherwise fall back to `chrome`.
 const browserApi = typeof browser !== 'undefined' ? browser : chrome;
 
-// Open an IndexedDB database to store archived pages.
-const dbPromise = idb.openDB('archives', 1, {
-  upgrade(db) {
-    const store = db.createObjectStore('pages', { keyPath: 'url' });
-    store.createIndex('ts', 'ts');
+browserApi.runtime.onMessage.addListener(async (data) => {
+  try {
+    const { enabled } = await browserApi.storage.local.get('enabled');
+    if (enabled === false) {
+      return;
+    }
+
+    const url = new URL(data.url);
+    const d = new Date();
+    const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const time = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}${String(d.getSeconds()).padStart(2, '0')}`;
+    const path = `${url.hostname}/${day}/${time}.html`;
+
+    const blobUrl = URL.createObjectURL(new Blob([data.html], { type: 'text/html' }));
+    await browserApi.downloads.download({ url: blobUrl, filename: path, saveAs: false });
+    URL.revokeObjectURL(blobUrl);
+    console.log('[saved]', path);
+  } catch (err) {
+    console.error('archive error', err);
   }
 });
 
-// Listen for messages from the content script containing page data.
-browserApi.runtime.onMessage.addListener(async (data) => {
-  try {
-    const db = await dbPromise;
-    // Overwrite existing entry if the same URL is visited again.
-    await db.put('pages', data);
-    console.log('[saved]', data.url);
-  } catch (err) {
-    console.error('DB error', err);
-  }
-});
+if (browserApi.browserAction && browserApi.browserAction.onClicked) {
+  browserApi.browserAction.onClicked.addListener(() => {
+    if (browserApi.runtime.openOptionsPage) {
+      browserApi.runtime.openOptionsPage();
+    }
+  });
+}

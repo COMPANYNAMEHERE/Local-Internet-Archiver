@@ -4,3 +4,4 @@
 - Favor `const` over `let` when variables are not reassigned.
 - Use `browser` WebExtension APIs; fall back to `chrome` for compatibility.
 - Run `npm test` before committing to ensure `web-ext lint` passes.
+- Persist user preferences to `browser.storage.local` when adding options pages.
