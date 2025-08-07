@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
-  "name": "Local Page Archiver",
-  "version": "0.1",
-  "description": "Save raw HTML of every page you open, locally only.",
-  "icons": { "128": "icon128.png" },
-  "permissions": ["storage", "scripting", "tabs"],
-  "host_permissions": ["<all_urls>"],
-  "background": { "service_worker": "background.js" },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["content.js"],
-    "run_at": "document_end"
-  }]
+  "name": "Local Internet Archiver",
+  "version": "0.1.0",
+  "description": "Locally store the raw HTML of pages you visit.",
+  "permissions": ["storage", "tabs", "<all_urls>"],
+  "background": { "scripts": ["background.js"], "persistent": false },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
 }
