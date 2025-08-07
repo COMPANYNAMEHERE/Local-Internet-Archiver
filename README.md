@@ -8,8 +8,11 @@ without sending data to external servers.
 ## Features
 
 - **Automatic archiving** – captures the full HTML of every page as it loads.
-- **Per-site folders** – files are stored under `~/Downloads/<domain>/<YYYY-MM-DD>/`.
-- **Options page** – toggle archiving on or off from the extension's options.
+- **Configurable save folder** – defaults to `Your Archive` but can be changed in
+  the options page.
+- **Per-site folders** – files are stored under `<save folder>/<domain>/<YYYY-MM-DD>/`.
+- **Popup controls** – toggle archiving or open the options page from the
+  extension button.
 - **Manifest V2** – uses a non-persistent background script for broad
   browser compatibility.
 
@@ -37,13 +40,15 @@ network access.
 2. Click **Load Temporary Add-on** and choose the `manifest.json` file in this
    repository.
 
-Once loaded, the extension will automatically archive visited pages.
-Clicking the extension icon opens an options page where archiving can be
-enabled or disabled.
+Once loaded, the extension will automatically archive visited pages when
+archiving is enabled.
 
 ## Manual Testing
 
 1. Load the extension in your browser.
-2. Ensure the **Enable archiving** box is checked on the options page.
-3. Visit any webpage and confirm an HTML file appears in your Downloads folder
+2. Click the extension icon and ensure **Enable archiving** is checked in the
+   popup.
+3. Visit any webpage and confirm an HTML file appears in the chosen save folder
    under the appropriate domain and date.
+4. Use the **Options** button in the popup to change the save folder and repeat
+   the above step to verify files are written to the new location.
