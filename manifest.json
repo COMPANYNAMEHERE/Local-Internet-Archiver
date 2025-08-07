@@ -3,7 +3,7 @@
   "name": "Local Internet Archiver",
   "version": "0.1.0",
   "description": "Locally store the raw HTML of pages you visit.",
-  "permissions": ["storage", "downloads", "tabs", "<all_urls>"],
+  "permissions": ["storage", "tabs", "<all_urls>"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false

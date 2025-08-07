@@ -1,6 +1,8 @@
 const browserApi = typeof browser !== 'undefined'
   ? browser
   : (typeof chrome !== 'undefined' ? chrome : null);
+const fs = typeof require !== 'undefined' ? require('fs').promises : null;
+const pathMod = typeof require !== 'undefined' ? require('path') : null;
 
 function buildPath(folder, urlString, ts) {
   const url = new URL(urlString);
@@ -10,16 +12,19 @@ function buildPath(folder, urlString, ts) {
   return `${folder}/${url.hostname}/${day}/${time}.html`;
 }
 
-async function archivePage(api, data, settings) {
+async function archivePage(data, settings) {
   if (settings.enabled === false) {
     return false;
   }
   const folder = settings.folder || 'Your Archive';
-  const path = buildPath(folder, data.url, data.ts ?? Date.now());
-  const blobUrl = URL.createObjectURL(new Blob([data.html], { type: 'text/html' }));
-  await api.downloads.download({ url: blobUrl, filename: path, saveAs: false });
-  URL.revokeObjectURL(blobUrl);
-  return path;
+  const relPath = buildPath(folder, data.url, data.ts ?? Date.now());
+  if (!fs || !pathMod) {
+    throw new Error('File system access not available');
+  }
+  const fullPath = pathMod.join(__dirname, relPath);
+  await fs.mkdir(pathMod.dirname(fullPath), { recursive: true });
+  await fs.writeFile(fullPath, data.html, 'utf8');
+  return fullPath;
 }
 
 if (browserApi && browserApi.runtime && browserApi.runtime.onMessage) {
@@ -29,7 +34,7 @@ if (browserApi && browserApi.runtime && browserApi.runtime.onMessage) {
         enabled: true,
         folder: 'Your Archive'
       });
-      await archivePage(browserApi, data, settings);
+      await archivePage(data, settings);
     } catch (err) {
       console.error('archive error', err);
     }
