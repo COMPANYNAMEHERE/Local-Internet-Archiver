@@ -10,8 +10,8 @@ without sending data to external servers.
 - **Automatic archiving** – captures the full HTML of every page as it loads.
 - **Per-site folders** – files are stored under `~/Downloads/<domain>/<YYYY-MM-DD>/`.
 - **Options page** – toggle archiving on or off from the extension's options.
-- **Manifest V3** – uses a service worker for modern Chrome and Firefox
-  compatibility.
+- **Manifest V2** – uses a non-persistent background script for broad
+  browser compatibility.
 
 ## Development
 

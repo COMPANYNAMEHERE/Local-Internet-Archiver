@@ -22,10 +22,16 @@ browserApi.runtime.onMessage.addListener(async (data) => {
   }
 });
 
-if (browserApi.action && browserApi.action.onClicked) {
-  browserApi.action.onClicked.addListener(() => {
-    if (browserApi.runtime.openOptionsPage) {
-      browserApi.runtime.openOptionsPage();
-    }
-  });
-}
+  if (browserApi.action && browserApi.action.onClicked) {
+    browserApi.action.onClicked.addListener(() => {
+      if (browserApi.runtime.openOptionsPage) {
+        browserApi.runtime.openOptionsPage();
+      }
+    });
+  } else if (browserApi.browserAction && browserApi.browserAction.onClicked) {
+    browserApi.browserAction.onClicked.addListener(() => {
+      if (browserApi.runtime.openOptionsPage) {
+        browserApi.runtime.openOptionsPage();
+      }
+    });
+  }
