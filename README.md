@@ -16,6 +16,19 @@ without sending data to external servers.
 - **Manifest V2** – uses a non-persistent background script for broad
   browser compatibility.
 
+## Permissions
+
+The extension requests the following permissions:
+
+- **storage** – store user preferences such as the archive folder and enabled state.
+- **downloads** – save HTML snapshots to your Downloads folder.
+- **tabs** – open the options page and interact with the current tab.
+- **<all_urls>** – inject the content script on every site you visit to capture pages.
+
+## Platform Notes
+
+Designed for Chrome and Firefox. Other Chromium-based browsers may work but have not been tested.
+
 ## Development
 
 No build step is required. The extension runs directly from the source files.
@@ -25,8 +38,7 @@ For basic checks you can run:
 npm test
 ```
 
-This command currently prints a placeholder message so it works even without
-network access.
+This command runs unit tests without requiring network access.
 
 ## Loading the Extension
 
