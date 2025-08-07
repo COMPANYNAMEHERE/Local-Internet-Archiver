@@ -9,7 +9,12 @@
   };
 
   // Send the page snapshot to the background script for storage on disk.
-  browserApi.runtime.sendMessage(payload).catch((err) => {
-    console.error('sendMessage failed', err);
-  });
+  console.log('sending archive payload', payload);
+  browserApi.runtime.sendMessage(payload)
+    .then(() => {
+      console.log('archive payload sent');
+    })
+    .catch((err) => {
+      console.error('sendMessage failed', err);
+    });
 })();
